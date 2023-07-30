@@ -1,0 +1,69 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #E6F4F1, #000000);
+  margin: 0 auto;
+}
+
+.img-container {
+  position: relative;
+}
+
+.img-fluid {
+  max-width: 150px; /* Adjust the size as desired */
+  width: auto;
+  height: auto;
+  animation: rotate 25s infinite linear;
+  transition: transform 0.3s;
+}
+
+.img-fluid:hover {
+  transform: scale(1.1);
+}
+
+.img-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 255, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1; /* Add this line to bring the glow element to the front */
+}
+
+.img-container:hover .img-glow {
+  opacity: 1;
+}
+
+.input-group {
+  width: 300px;
+  margin-top: 20px;
+}
+
+.footer {
+  padding: 20px;
+  font-size: 14px;
+  text-align: center;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.8);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
