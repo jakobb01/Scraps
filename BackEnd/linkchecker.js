@@ -13,14 +13,14 @@ let brokenLinks = []
 
 checker.on('link', (link) => {
     //console.log(link)
-    process.stdout.write(LOGGER_MAP[link.state])
+    //process.stdout.write(LOGGER_MAP[link.state])
 
     if (link.state === 'BROKEN') {
         brokenLinks.push(link);
     }
 });
 
-await checker.check({path: 'https://www.cosylab.com/', recurse: true})
+await checker.check({path: 'https://reactrouter.com/en/main/start/overview', recurse: true})
 
 if (brokenLinks.length > 0) {
     console.log('');
