@@ -1,9 +1,10 @@
 import React from "react";
+import LoginView from "./LoginView";
 
 const User = () => {
     return (
         <div>
-        <h1>User Page</h1>
+            <LoginView />
         </div>
     );
 }
