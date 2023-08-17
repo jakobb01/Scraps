@@ -7,13 +7,13 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE || 'test',
 }).promise();
 
-export async function getAll() {
+async function getAll() {
     const [rows] = await pool.query("SELECT * FROM test");
     return rows;
 }
 
 // prepared statement
-export async function getById(id) {
+async function getById(id) {
     const [rows] = await pool.query(`
         SELECT *
         FROM test
@@ -22,7 +22,7 @@ export async function getById(id) {
     return rows;
 }
 
-export async function create(id, body) {
+async function create(id, body) {
     const [result] = await pool.query(`
         INSERT INTO test (id, body)
         VALUES (?, ?)
@@ -30,3 +30,5 @@ export async function create(id, body) {
     const new_id = result.insertId;
     return getById(new_id);
 }
+
+module.exports = { getAll, getById, create, pool };
