@@ -103,7 +103,10 @@ main {
 :focus{
     outline: none;
     box-shadow: none;
-    border-color: #b5c2c7 ;
+    background: #b5c2c7;
+    border: 4px solid #000000;
+    color: #000000;
+    font-size: 20px;
 }
 
 .go-button {
@@ -142,6 +145,10 @@ main {
     box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
     transform: translateY(-2px);
     font-size: 20px;
+    background: #b5c2c7;
+    color: #000000;
+    border: 4px solid #000000;
+    font-weight: bold;
 }
 
 .go-button:active {
