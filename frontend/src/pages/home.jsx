@@ -8,10 +8,6 @@ const Home = () => {
     const [url, setUrl] = useState("");
     const navigate = useNavigate();
 
-    const handleInputChange = (event) => {
-        setUrl(event.target.value);
-    };
-
     const handleNavigation = (path) => {
         navigate(path);
     };
@@ -21,6 +17,8 @@ const Home = () => {
         try {
             await axios.post("/search", {
                 url: url
+            }).then((res) => {
+                console.log(res);
             });
             handleNavigation("/search")
         } catch (err) {
@@ -41,7 +39,7 @@ const Home = () => {
                         type="text"
                         placeholder="Enter URL"
                         value={url}
-                        onChange={handleInputChange}
+                        onChange={(e) => setUrl(e.target.value)}
                         className="url-input"
                     />
                 </div>

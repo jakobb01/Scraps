@@ -15,7 +15,7 @@ import Search from "./pages/search";
 import Layout from "./layout";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.baseURL = "http://localhost:5054";
 
 function App() {
   return (
