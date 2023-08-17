@@ -12,7 +12,7 @@ const Home = () => {
 
     const handleGoClick = () => {
         // Handle the URL submission logic here
-        console.log("URL submitted:", url);
+        handleNavigation("/search")
     };
 
     const handleNavigation = (path) => {
@@ -22,7 +22,7 @@ const Home = () => {
     return (
         <div className="home-container">
             <nav>
-                <button onClick={() => handleNavigation("/top-urls")} className="nav-button">Top URL's</button>
+                <button onClick={() => handleNavigation("/topurls")} className="nav-button">Top URL's</button>
                 <button onClick={() => handleNavigation("/history")} className="nav-button">History</button>
                 <button onClick={() => handleNavigation("/login")} className="nav-button">Login/Logout</button>
             </nav>
