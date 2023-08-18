@@ -5,6 +5,7 @@ const safeurl = require("./routes/safeurl");
 const linkchecker = require("./routes/linkchecker.js");
 const statsapi = require("./routes/statsapi");
 //const db = require('./db/database')
+require('dotenv').config()
 
 
 app.use(express.json());
@@ -56,6 +57,6 @@ app.get('/topurls', (req, res) => {
 
 
 
-app.listen(process.env.SERVER_PORT || 5054, () => {
-  console.log(`server is running on port ${process.env.SERVER_PORT || 5054}`);
+app.listen(process.env.SERVER_PORT || 5055, () => {
+  console.log(`server is running on port ${process.env.SERVER_PORT || 5055}`);
 });
