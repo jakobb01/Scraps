@@ -15,7 +15,7 @@ const Home = () => {
     async function sendUrl(ev) {
         ev.preventDefault();
         try {
-            await axios.post("/search", {
+            await axios.post("/search/safe", {
                 url: url
             }).then((res) => {
                 console.log(res);
