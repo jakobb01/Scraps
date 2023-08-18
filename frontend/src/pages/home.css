@@ -54,6 +54,7 @@ nav {
     width: 10%;
     will-change: transform;
     opacity: 0.7;
+
 }
 
 .nav-button:disabled {

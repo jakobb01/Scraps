@@ -9,8 +9,9 @@ export default function Header() {
     return (
         <div className="home-container">
             <nav>
+                <button onClick={() => handleNavigation("/short")} className="nav-button">Shortener</button>
                 <button onClick={() => handleNavigation("/")} className="nav-button">Search</button>
-                <button onClick={() => handleNavigation("/topurls")} className="nav-button">Top URL's</button>
+                <button onClick={() => handleNavigation("/topurls")} className="nav-button">Top-URL's</button>
                 <button onClick={() => handleNavigation("/history")} className="nav-button">History</button>
                 <button onClick={() => handleNavigation("/login")} className="nav-button">Login/Logout</button>
             </nav>
