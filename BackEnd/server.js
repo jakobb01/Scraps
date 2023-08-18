@@ -4,7 +4,7 @@ const cors = require("cors")
 const safeurl = require("./routes/safeurl");
 const linkchecker = require("./routes/linkchecker.js");
 const statsapi = require("./routes/statsapi");
-//const db = require('./db/database')
+const db = require('./db/database')
 require('dotenv').config()
 
 
@@ -56,7 +56,7 @@ app.get('/topurls', (req, res) => {
 
 
 
-
+// free ports -> nc -zv 88.200.63.148 5000-5100
 app.listen(process.env.SERVER_PORT || 5055, () => {
   console.log(`server is running on port ${process.env.SERVER_PORT || 5055}`);
 });
