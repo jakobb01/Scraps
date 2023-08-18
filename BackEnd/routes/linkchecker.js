@@ -1,5 +1,5 @@
-import { LinkChecker } from 'linkinator'
-import chalk from 'chalk'
+const { LinkChecker } = require('linkinator')
+const chalk = require('chalk')
 
 const LOGGER_MAP = {
     OK: chalk.green("✓"),
