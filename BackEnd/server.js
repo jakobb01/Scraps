@@ -83,13 +83,18 @@ app.post('/search/linkcheck', async (req, res) => {
 app.post('/login', async (req, res) => {
   const userdetails = await db.authUser(req.body.email);
   const psw = req.body.password;
-  bcrypt.compare(psw, userdetails[0].geslo, function (err, result) {
-    if (result) {
-      res.send(userdetails[0].uid);
-    } else {
-      res.send("Invalid password");
-    }
-  });
+  try {
+    bcrypt.compare(psw, userdetails[0].geslo, function (err, result) {
+      if (result) {
+        res.send(userdetails[0].uid);
+      } else {
+        res.send("Invalid password");
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err });
+  }
 });
 
 app.post('/signup', async (req, res) => {
@@ -102,7 +107,7 @@ app.post('/signup', async (req, res) => {
       res.send(await db.addUser(id, req.body.username, req.body.email, hash));
     } catch (err) {
       console.log(err);
-      res.status(500).json('Database error');
+      res.status(500).json({ error: err });
     }
   });
 });
