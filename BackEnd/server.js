@@ -23,15 +23,21 @@ app.use(cors({
 
 //search page
 app.post('/search/safe', async (req, res) => {
-  const safedata = await safeurl(req.body.url);
-  if (req.body.uid) {
-    try (safedata.risk_score) {
-      await db.addUserHistory(req.body.uid, req.body.url, safedata.risk_score);
-    } catch (err) {
-      console.log(err);
+  try {
+    const safedata = await safeurl(req.body.url);
+    if (req.body.uid) {
+      try (safedata.risk_score) {
+        await db.addUserHistory(req.body.uid, req.body.url, safedata.risk_score);
+      } catch (err) {
+        console.log(err);
+      }
     }
+    res.send(safedata);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err });
   }
-  res.send(safedata);
+
 });
 
 app.post('/search/linkcheck', async (req, res) => {
@@ -60,6 +66,7 @@ app.post('/search/linkcheck', async (req, res) => {
     res.send(checkdata);
   } catch (err) {
     console.log(err);
+    res.status(500).json({ error: err });
   }
 
 });
@@ -84,26 +91,43 @@ app.post('/signup', async (req, res) => {
 
   bcrypt.hash(psw, saltRounds, async function (err, hash) {
     try {
-      await db.addUser(id, req.body.username, req.body.email, hash);
+      res.send(await db.addUser(id, req.body.username, req.body.email, hash));
     } catch (err) {
       console.log(err);
+      res.status(500).json('Database error');
     }
   });
 });
 
 //user history page
 app.get('/history/:uid', async (req, res) => {
-  res.send(await db.getUserHistory(req.params.uid));
+  try {
+    res.send(await db.getUserHistory(req.params.uid));
+  } catch (err) {
+    console.log(err);
+    res.status(500).json('Database error');
+  }
 });
 
 //top 10 urls page
 app.get('/topurls', async (req, res) => {
-  res.send(await db.getTop());
+  try {
+    res.send(await db.getTop());
+  } catch (err) {
+    console.log(err);
+    res.status(500).json('Database error');
+  }
 });
 
 //short url page
 app.get('/short/:url', async (req, res) => {
-  res.send(await db.findShort(req.params.url));
+  try {
+    res.send(await db.findShort(req.params.url));
+  } catch (err) {
+    console.log(err);
+    res.status(500).json('Database error');
+  }
+
 });
 
 app.post('/short', async (req, res) => {
@@ -126,7 +150,12 @@ app.post('/short', async (req, res) => {
 });
 
 app.get('/short/history/:uid', async (req, res) => {
-  res.send(await db.getUserShort(req.params.uid));
+  try {
+    res.send(await db.getUserShortHistory(req.params.uid));
+  } catch (err) {
+    console.log(err);
+    res.status(500).json('Database error');
+    }
 });
 
 // free ports -> nc -zv 88.200.63.148 5000-5100
