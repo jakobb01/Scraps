@@ -35,18 +35,33 @@ app.post('/search/safe', async (req, res) => {
 });
 
 app.post('/search/linkcheck', async (req, res) => {
-  const checkdata = await linkchecker(req.body.url);
-  // compare to top 10
-  // if greater then some value
-  // remove that value from top 10
-  // add new value to top 10
   try {
-    await db.addTop(req.body.url, checkdata.percent);
+    const checkdata = await linkchecker(req.body.url);
+    const top = await db.getTop();
+
+    // Assume that the top 10 scores are stored in an array
+    let minScore = null;
+    let minScoreUrl = null;
+
+    // Find the smallest score in the top 10
+    for (let i = 0; i < top.length; i++) {
+      if (minScore === null || top[i].percent < minScore) {
+        minScore = top[i].percent;
+        minScoreUrl = top[i].url;
+      }
+    }
+
+    // If the new score is greater than the smallest score in the top 10, replace it
+    if (checkdata.percent > minScore) {
+      await db.removeTop(minScoreUrl);
+      await db.addTop(req.body.url, checkdata.percent);
+    }
+
+    res.send(checkdata);
   } catch (err) {
     console.log(err);
   }
 
-  res.send(checkdata);
 });
 
 //login & register page
