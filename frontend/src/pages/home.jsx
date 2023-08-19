@@ -3,14 +3,12 @@ import { useNavigate } from "react-router-dom";
 import "./home.css";
 import Header from "../header";
 import axios from "axios";
+import Search from "./search";
 
 const Home = () => {
     const [url, setUrl] = useState("");
+    const [send, setRes] = useState({});
     const navigate = useNavigate();
-
-    const handleNavigation = (path) => {
-        navigate(path);
-    };
 
     async function sendUrl(ev) {
         ev.preventDefault();
@@ -19,8 +17,10 @@ const Home = () => {
                 url: url
             }).then((res) => {
                 console.log(res);
+                setRes(res);
+                Search.getData(res);
             });
-            handleNavigation("/search")
+            navigate("/search", {send});
         } catch (err) {
             alert("Error sending URL! Please try again.")
             console.error(err);
