@@ -4,6 +4,8 @@ const cors = require("cors")
 const safeurl = require("./routes/safeurl");
 const linkchecker = require("./routes/linkchecker.js");
 const db = require('./db/database')
+const {generate} = require("shortid");
+const {isUri} = require("valid-url");
 require('dotenv').config()
 
 
@@ -80,7 +82,22 @@ app.get('/short/:url', async (req, res) => {
 });
 
 app.post('/short', async (req, res) => {
-    res.send(await db.addUserShort(req.body.uid, req.body.url, req.body.short));
+  const baseUrl = req.body.url;
+
+  if (isUri(baseUrl)) {
+    const urlCode = generate();
+    try (await db.addUserShort(req.body.uid, req.body.url, urlCode)) {
+      res.send({
+        uid: req.body.uid,
+        url: req.body.url,
+        shortUrl: `${process.env.SERVER_IP || "http://localhost"}:${process.env.SERVER_PORT || 5053}/${urlCode}`
+      })
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    return res.status(401).json('Invalid base url');
+  }
 });
 
 app.get('/short/history/:uid', async (req, res) => {

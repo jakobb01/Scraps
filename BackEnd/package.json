@@ -19,7 +19,9 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "linkinator": "^2.16.2",
-    "mysql2": "^3.6.0"
+    "mysql2": "^3.6.0",
+    "shortid": "^2.2.16",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
