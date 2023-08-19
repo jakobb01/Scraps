@@ -26,7 +26,7 @@ app.post('/search/safe', async (req, res) => {
   try {
     const safedata = await safeurl(req.body.url);
     if (req.body.uid) {
-      try (safedata.risk_score) {
+      try {
         await db.addUserHistory(req.body.uid, req.body.url, safedata.risk_score);
       } catch (err) {
         console.log(err);
@@ -135,7 +135,8 @@ app.post('/short', async (req, res) => {
 
   if (isUri(baseUrl)) {
     const urlCode = generate();
-    try (await db.addUserShort(req.body.uid, req.body.url, urlCode)) {
+    try  {
+      await db.addShort(req.body.uid, req.body.url, urlCode);
       res.send({
         uid: req.body.uid,
         url: req.body.url,
