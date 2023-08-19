@@ -103,7 +103,7 @@ dataPool.authUser = (email) => {
 
 dataPool.addUser = (num, username, email, password) => {
     return new Promise ((resolve, reject) => {
-        conn.query(`INSERT INTO Uporabnik (id, uporabnisko_ime, email, geslo) VALUES (?, ?, ?, ?)`, [num, username, email, password], (err, res) => {
+        conn.query(`INSERT INTO Uporabnik (uid, uporabnisko_ime, email, geslo) VALUES (?, ?, ?, ?)`, [num, username, email, password], (err, res) => {
             if(err) {return reject(err)}
             return resolve(res)
         })

@@ -43,24 +43,32 @@ app.post('/search/safe', async (req, res) => {
 app.post('/search/linkcheck', async (req, res) => {
   try {
     const checkdata = await linkchecker(req.body.url);
+   
+    if (req.body.uid) {
     const top = await db.getTop();
+      if (top.length < 10) {
+        await db.addTop(req.body.url, checkdata.percent);
+      } else {
+        // Assume that the top 10 scores are stored in an array
+    	let minScore = null;
+    	let minScoreUrl = null;
+	
+    	// Find the smallest score in the top 10
+    	for (let i = 0; i < top.length; i++) {
+      	  if (minScore === null || top[i].percent < minScore) {
+            minScore = top[i].percent;
+            minScoreUrl = top[i].url;
+      	  }
+    	}
 
-    // Assume that the top 10 scores are stored in an array
-    let minScore = null;
-    let minScoreUrl = null;
-
-    // Find the smallest score in the top 10
-    for (let i = 0; i < top.length; i++) {
-      if (minScore === null || top[i].percent < minScore) {
-        minScore = top[i].percent;
-        minScoreUrl = top[i].url;
+    	// If the new score is greater than the smallest score in the top 10, replace it
+    	if (checkdata.percent > minScore) {
+          if (minScoreUrl !== null) {
+            await db.removeTop(minScoreUrl);
+      	  }
+      	  await db.addTop(req.body.url, checkdata.percent);
+    	}
       }
-    }
-
-    // If the new score is greater than the smallest score in the top 10, replace it
-    if (checkdata.percent > minScore) {
-      await db.removeTop(minScoreUrl);
-      await db.addTop(req.body.url, checkdata.percent);
     }
 
     res.send(checkdata);
@@ -75,9 +83,9 @@ app.post('/search/linkcheck', async (req, res) => {
 app.post('/login', async (req, res) => {
   const userdetails = await db.authUser(req.body.email);
   const psw = req.body.password;
-  bcrypt.compare(psw, userdetails.password, function (err, result) {
+  bcrypt.compare(psw, userdetails[0].geslo, function (err, result) {
     if (result) {
-      res.send(userdetails.uid);
+      res.send(userdetails[0].uid);
     } else {
       res.send("Invalid password");
     }
@@ -102,7 +110,7 @@ app.post('/signup', async (req, res) => {
 //user history page
 app.get('/history/:uid', async (req, res) => {
   try {
-    res.send(await db.getUserHistory(req.params.uid));
+    res.send((await db.getUserHistory(req.params.uid)));
   } catch (err) {
     console.log(err);
     res.status(500).json('Database error');
@@ -112,7 +120,7 @@ app.get('/history/:uid', async (req, res) => {
 //top 10 urls page
 app.get('/topurls', async (req, res) => {
   try {
-    res.send(await db.getTop());
+    res.send((await db.getTop()));
   } catch (err) {
     console.log(err);
     res.status(500).json('Database error');
@@ -122,10 +130,10 @@ app.get('/topurls', async (req, res) => {
 //short url page
 app.get('/short/:url', async (req, res) => {
   try {
-    res.send(await db.findShort(req.params.url));
+    res.send((await db.findShort(req.params.url))[0]);
   } catch (err) {
     console.log(err);
-    res.status(500).json('Database error');
+    res.status(500).json({Error: err});
   }
 
 });
@@ -136,11 +144,11 @@ app.post('/short', async (req, res) => {
   if (isUri(baseUrl)) {
     const urlCode = generate();
     try  {
-      await db.addShort(req.body.uid, req.body.url, urlCode);
+      await db.addUserShort(req.body.uid, req.body.url, urlCode);
       res.send({
         uid: req.body.uid,
         url: req.body.url,
-        shortUrl: `${process.env.SERVER_IP || "http://localhost"}:${process.env.SERVER_PORT || 5053}/${urlCode}`
+        shortUrl: `${process.env.SERVER_IP || "http://localhost"}:${process.env.SERVER_PORT || 5053}/short/${urlCode}`
       })
     } catch (err) {
       console.log(err);
@@ -152,10 +160,10 @@ app.post('/short', async (req, res) => {
 
 app.get('/short/history/:uid', async (req, res) => {
   try {
-    res.send(await db.getUserShortHistory(req.params.uid));
+    res.send(await db.getUserShort(req.params.uid));
   } catch (err) {
     console.log(err);
-    res.status(500).json('Database error');
+    res.status(500).json({Error: err});
     }
 });
 
