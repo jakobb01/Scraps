@@ -3,7 +3,6 @@ const app = express();
 const cors = require("cors")
 const safeurl = require("./routes/safeurl");
 const linkchecker = require("./routes/linkchecker.js");
-const statsapi = require("./routes/statsapi");
 const db = require('./db/database')
 require('dotenv').config()
 
@@ -19,42 +18,74 @@ app.use(cors({
 
 //search page
 app.post('/search/safe', async (req, res) => {
-  res.send(await safeurl(req.body.url));
+  const safedata = await safeurl(req.body.url);
+  if (req.body.uid) {
+    try (safedata.risk_score) {
+      await db.addUserHistory(req.body.uid, req.body.url, safedata.risk_score);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  res.send(safedata);
 });
 
 app.post('/search/linkcheck', async (req, res) => {
-  res.send(await linkchecker(req.body.url));
-});
+  const checkdata = await linkchecker(req.body.url);
+  // compare to top 10
+  // if greater then some value
+  // remove that value from top 10
+  // add new value to top 10
+  try {
+    await db.addTop(req.body.url, checkdata.percent);
+  } catch (err) {
+    console.log(err);
+  }
 
-app.post('/search/stats', async (req, res) => {
-  console.log(await statsapi(req.body.url));
-  res.send('JSON file with stats of pic home page');
+  res.send(checkdata);
 });
-
 
 //login & register page
 app.post('/login', (req, res) => {
-
+  const userdetails = db.authUser(req.body.email)
+  // password hash
+  const psw = req.body.password;
+  if (userdetails.geslo === psw) {
+    res.send(userdetails.uid);
+  } else {
+    res.send("error");
+  }
 });
 
-app.post('/signup', (req, res) => {
-
+app.post('/signup', async (req, res) => {
+  // user id
+  id = Math.floor(Math.random() * 90000) + 10000;
+  // password hash
+  const psw = req.body.password;
+  res.send(await db.addUser(id, req.body.username, req.body.email, psw));
 });
 
 //user history page
-app.get('/history', (req, res) => {
-  res.send('JSON file with user history');
+app.get('/history/:uid', async (req, res) => {
+  res.send(await db.getUserHistory(req.params.uid));
 });
 
 //top 10 urls page
-app.get('/topurls', (req, res) => {
-  res.send('JSON file with top 10 urls overall');
+app.get('/topurls', async (req, res) => {
+  res.send(await db.getTop());
 });
 
 //short url page
+app.get('/short/:url', async (req, res) => {
+  res.send(await db.findShort(req.params.url));
+});
 
+app.post('/short', async (req, res) => {
+    res.send(await db.addUserShort(req.body.uid, req.body.url, req.body.short));
+});
 
-
+app.get('/short/history/:uid', async (req, res) => {
+  res.send(await db.getUserShort(req.params.uid));
+});
 
 // free ports -> nc -zv 88.200.63.148 5000-5100
 app.listen(process.env.SERVER_PORT || 5055, () => {
