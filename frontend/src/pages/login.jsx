@@ -2,6 +2,7 @@ import "./login.css";
 import {Link} from "react-router-dom";
 import {useState} from "react";
 import axios from "axios";
+import '../config';
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -13,7 +14,14 @@ export default function Login() {
             await axios.post("/login", {
                 email: email,
                 password: password
-            })
+            }).then((res) => {
+                try {
+                    global.config.token.uid = res.uid;
+                    console.log(global.config.token.uid);
+                } catch (err) {
+                    console.log(err);
+                }
+            });
             alert("Login successful!");
         } catch (err) {
             alert("Login failed!");

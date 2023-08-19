@@ -7,6 +7,9 @@ const db = require('./db/database')
 const {generate} = require("shortid");
 const {isUri} = require("valid-url");
 require('dotenv').config()
+const bcrypt = require('bcrypt');
+const saltRounds = 6;
+const { v4: uuidv4 } = require('uuid');
 
 
 app.use(express.json());
@@ -47,23 +50,30 @@ app.post('/search/linkcheck', async (req, res) => {
 });
 
 //login & register page
-app.post('/login', (req, res) => {
-  const userdetails = db.authUser(req.body.email)
-  // password hash
+app.post('/login', async (req, res) => {
+  const userdetails = await db.authUser(req.body.email);
   const psw = req.body.password;
-  if (userdetails.geslo === psw) {
-    res.send(userdetails.uid);
-  } else {
-    res.send("error");
-  }
+  bcrypt.compare(psw, userdetails.password, function (err, result) {
+    if (result) {
+      res.send(userdetails.uid);
+    } else {
+      res.send("Invalid password");
+    }
+  });
 });
 
 app.post('/signup', async (req, res) => {
-  // user id
-  id = Math.floor(Math.random() * 90000) + 10000;
-  // password hash
   const psw = req.body.password;
-  res.send(await db.addUser(id, req.body.username, req.body.email, psw));
+
+  const id = uuidv4();
+
+  bcrypt.hash(psw, saltRounds, async function (err, hash) {
+    try {
+      await db.addUser(id, req.body.username, req.body.email, hash);
+    } catch (err) {
+      console.log(err);
+    }
+  });
 });
 
 //user history page
