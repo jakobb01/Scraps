@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
-import Header from "../header";
 import axios from "axios";
 
-const Home = () => {
+const Home = (params) => {
     const [url, setUrl] = useState("");
     const navigate = useNavigate();
+    const { token, setUurl, setUurlData } = params;
 
     const handleNavigation = (path) => {
         navigate(path);
@@ -16,10 +16,12 @@ const Home = () => {
         ev.preventDefault();
         try {
             await axios.post("/search/safe", {
+                uid: token,
                 url: url
             }).then((res) => {
-                console.log(res);
+                setUurlData(res.data);
             });
+            setUurl(url);
             handleNavigation("/search")
         } catch (err) {
             alert("Error sending URL! Please try again.")

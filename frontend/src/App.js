@@ -21,14 +21,16 @@ axios.defaults.baseURL = "http://88.200.63.148:5053";
 
 function App() {
     const [token, setToken] = useState(null);
+    const [uurl, setUurl] = useState(null);
+    const [uurldata, setUurlData] = useState({});
     return (
     <div className="App">
         <BrowserRouter>
             <Routes>
                 <Route path={"/"} element={<Layout />}>
-                    <Route index element=<Home /> />
+                    <Route index element=<Home token={token} setUurl={setUurl} setUurlData={setUurlData} /> />
                     <Route path="/login" element=<Login token={token} setToken={setToken} /> />
-                    <Route path="/search" element=<Search token={token} setToken={setToken} /> />
+                    <Route path="/search" element=<Search token={token} uurl={uurl} uurldata={uurldata} /> />s
                     <Route path="/history" element=<History token={token} /> />
                     <Route path="/topurls" element=<Topurl /> />
                     <Route path="/signup" element=<Signup /> />
