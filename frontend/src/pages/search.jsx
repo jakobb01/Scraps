@@ -1,8 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import axios from "axios";
 
 const Search = (params) => {
     let { token, uurl, uurldata } = params;
+    const [isLoading, setIsLoading] = useState(false);
+    const [linkCheck, setLinkCheck] = useState([]);
 
     async function tryAgain() {
         await axios.post("/search/safe", {
@@ -19,7 +21,7 @@ const Search = (params) => {
             uid: token,
             url: uurl
         }).then((res) => {
-            console.log(res.data);
+            setLinkCheck(res);
         });
     }
 
@@ -47,7 +49,25 @@ const Search = (params) => {
 
                 
                 <button onClick={getLinkCheck}>Check for broken links on website</button>
-                <h2>Link checker: </h2>
+
+                {isLoading && <h2>Loading...</h2>}
+
+                {linkCheck.data &&
+                <div>
+                    <h2>Link checker: </h2>
+                    <div>Number of broken links / all links: {linkCheck.data.numofbroken} / {linkCheck.data.numofall}</div>
+                    <div>BROKEN LINKS PRESENT {linkCheck.data.percent}% OF ALL LINKS</div>
+
+                    {linkCheck.data.brokenlinks.map((item) => {
+                        <div>
+                        <div>URL: {item.url}</div>
+                        <div>STATE: {item.state}</div>
+                        </div>
+                    })}
+
+                </div>
+                }
+
 
             </div>
         );

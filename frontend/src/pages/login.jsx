@@ -1,9 +1,7 @@
-import "./login.css";
+import "../pages-css/login.css";
 import {Link} from "react-router-dom";
 import {useState} from "react";
 import axios from "axios";
-import '../config';
-import App from "../App";
 
 export default function Login(params) {
     const [email, setEmail] = useState("");
@@ -38,19 +36,33 @@ export default function Login(params) {
     }
 
 
-    return (
-        <div className="login-div">
-            <h1 className="login-h1">Login</h1>
-            <form className="login-form" onSubmit={loginUser}>
-                <input type="email" placeholder="your@email.com" className="login-bar"
-                       value={email}
-                       onChange={(e) => setEmail(e.target.value)}/>
-                <input type="password" placeholder="password" className="login-bar"
-                       value={password}
-                       onChange={(e) => setPassword(e.target.value)}/>
-                <button type="submit" className="login-bar login-submit">Login</button>
-            </form>
-            <div className="login-text">Don't have an account yet? <Link to={"/signup"}>Register now</Link></div>
-        </div>
-    );
+    if (token === null) {
+        return (
+            <div className="login-div">
+                <h1 className="login-h1">Login</h1>
+                <form className="login-form" onSubmit={loginUser}>
+                    <input type="email" placeholder="your@email.com" className="login-bar"
+                           value={email}
+                           onChange={(e) => setEmail(e.target.value)}/>
+                    <input type="password" placeholder="password" className="login-bar"
+                           value={password}
+                           onChange={(e) => setPassword(e.target.value)}/>
+                    <button type="submit" className="login-bar login-submit">Login</button>
+                </form>
+                <div className="login-text">Don't have an account yet? <Link to={"/signup"}>Register now</Link></div>
+            </div>
+        );
+    } else {
+        return (
+            <div>
+                <h1>You are already logged in!</h1>
+
+                <button onClick={() => {
+                    setToken(null);
+                    window.location.reload(false);}
+                }>Logout</button>
+            </div>
+        );
+    }
+
 }

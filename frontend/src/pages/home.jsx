@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./home.css";
+import "../pages-css/home.css";
 import axios from "axios";
 
 const Home = (params) => {

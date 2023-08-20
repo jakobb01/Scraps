@@ -1,12 +1,29 @@
-import React, {useState} from "react";
-import ShortTable from "./shorttable";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
+import Datatable from "../components/datatable";
 
 const Short = (params) => {
     const [base_url, setBaseUrl] = useState("");
+    const [hdata, setHdata] = useState([]);
+    const [data, setData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const { token } = params;
 
+    useEffect(() => {
+        const fetchData = async () => {
+
+            try {
+                const response = await axios.get(`/short/history/${token}`);
+                setHdata(response.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchData();
+    }, []);
+
     async function shortUrl() {
+        setIsLoading(true);
         await axios.post("/short", {
             uid: token,
             url: base_url
@@ -14,8 +31,7 @@ const Short = (params) => {
         ).then((res) => {
             try {
                 if (res) {
-                    console.log(res.shortUrl);
-                    alert("Shortening successful!");
+                    setData(res);
                 }
             } catch (err) {
                 console.log(err);
@@ -34,9 +50,18 @@ const Short = (params) => {
                        onChange={(e) => setBaseUrl(e.target.value)}/>
                 <button type="submit" onClick={shortUrl}>Short!</button>
 
+                {isLoading && <h2>Loading...</h2>}
+
+                {data.data &&
+                <div>
+                    <div>LONG URL: {data.data.url}</div>
+                    <div>SHORT URL: {data.data.shortUrl}</div>
+                </div>
+                }
+
                 <h2>Your short links: </h2>
 
-                <ShortTable token={token}/>
+                <Datatable data={hdata} fstName={"LONG URL"} scnName={"SHORT URL"}/>
 
 
             </div>

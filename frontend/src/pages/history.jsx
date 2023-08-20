@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
-import Header from "../header";
 import axios from "axios";
-import Datatable from "./datatable";
+import Datatable from "../components/datatable";
 
 const History = (params) => {
     const [data, setData] = useState([]);
@@ -9,7 +8,6 @@ const History = (params) => {
 
 
     useEffect(() => {
-        // eslint-disable-next-line no-unused-vars
         const fetchData = async () => {
 
             try {
@@ -26,7 +24,7 @@ const History = (params) => {
             <div>
                 <h1>Your search history</h1>
 
-                <Datatable data={data} />
+                <Datatable data={data} fstName={"URL"} scnName={"SAFETY SCORE"}/>
 
             </div>
     	);

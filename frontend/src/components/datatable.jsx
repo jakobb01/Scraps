@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 const Datatable = (params) => {
 
-    const { data } = params;
+    const { data, fstName, scnName } = params;
 
 
     return (
@@ -10,8 +10,8 @@ const Datatable = (params) => {
             <table>
                 <thead>
                 <tr>
-                    <th>URL</th>
-                    <th>Score</th>
+                    <th>{fstName}</th>
+                    <th>{scnName}</th>
                 </tr>
                 </thead>
                 <tbody>
