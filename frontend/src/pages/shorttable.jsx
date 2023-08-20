@@ -1,37 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const ShortTable = () => {
+const ShortTable = (params) => {
     const [data, setData] = useState([]);
+    const { token } = params;
 
     useEffect(() => {
+        // eslint-disable-next-line no-unused-vars
         const fetchData = async () => {
             
             try {
-                const response = await axios.get('/short/history/3022884c-4b62-47a7-b110-01e8f4a08b6e');
+                const response = await axios.get(`/short/history/${token}`);
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
-
- 		/* 
-            const response = [
-                {
-                    "uid": "3022884c-4b62-47a7-b110-01e8f4a08b6e",
-                    "url": "https://bobbyhadz.com/",
-                    "short": "2GV9aIcfz"
-                },
-                {
-                    "uid": "3022884c-4b62-47a7-b110-01e8f4a08b6e",
-                    "url": "https://ferrari.com/",
-                    "short": "vGxQgkbdk"
-                }
-            ];
-            setData(response);
-	    */
-        };
-
-        fetchData();
+        await fetchData();
+        }
     }, []);
 
     return (
