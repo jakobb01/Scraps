@@ -6,15 +6,15 @@ const ShortTable = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            /*
+            
             try {
-                const response = await axios.get('http://88.200.63.148:5053/short/history/3022884c-4b62-47a7-b110-01e8f4a08b6e');
+                const response = await axios.get('/short/history/3022884c-4b62-47a7-b110-01e8f4a08b6e');
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
 
-             */
+ 		/* 
             const response = [
                 {
                     "uid": "3022884c-4b62-47a7-b110-01e8f4a08b6e",
@@ -28,6 +28,7 @@ const ShortTable = () => {
                 }
             ];
             setData(response);
+	    */
         };
 
         fetchData();

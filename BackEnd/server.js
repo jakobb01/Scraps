@@ -15,7 +15,7 @@ const { v4: uuidv4 } = require('uuid');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: [`http://localhost:${process.env.CLIENT_PORT || 3000}`],
+  origin: [`http://88.200.63.148:${process.env.CLIENT_PORT || 3000}`],
   methods: ["GET", "POST"],
   credentials: true
 }));
@@ -88,11 +88,11 @@ app.post('/login', async (req, res) => {
       if (result) {
         res.send(userdetails[0].uid);
       } else {
-        res.send("Invalid password");
+        res.status(500).json("Invalid password");
       }
     });
   } catch (err) {
-    console.log(err);
+    console.log("Invalid password");
     res.status(500).json({ error: err });
   }
 });

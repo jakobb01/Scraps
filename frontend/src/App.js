@@ -17,7 +17,7 @@ import axios from "axios";
 import Short from "./pages/short";
 import {useState} from "react";
 
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+axios.defaults.baseURL = "http://88.200.63.148:5053";
 
 function App() {
     const [token, setToken] = useState(null);
