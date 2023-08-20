@@ -14,25 +14,29 @@ import Signup from "./pages/signup";
 import Search from "./pages/search";
 import Layout from "./layout";
 import axios from "axios";
+import Short from "./pages/short";
+import {useState} from "react";
 
-axios.defaults.baseURL = "http://localhost:5054";
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 function App() {
-  return (
+    const [token, setToken] = useState(null);
+    return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-            <Route path={"/"} element={<Layout />}>
-                <Route index element=<Home /> />
-                <Route path="/login" element=<Login /> />
-                <Route path="/search" element=<Search /> />
-                <Route path="/history" element=<History /> />
-                <Route path="/topurls" element=<Topurl /> />
-                <Route path="/signup" element=<Signup /> />
-            </Route>
-
-        </Routes>
-      </BrowserRouter>
+        <BrowserRouter>
+            <Routes>
+                <Route path={"/"} element={<Layout />}>
+                    <Route index element=<Home /> />
+                    <Route path="/login" element=<Login token={token} setToken={setToken} /> />
+                    <Route path="/search" element=<Search /> />
+                    <Route path="/history" element=<History /> />
+                    <Route path="/topurls" element=<Topurl /> />
+                    <Route path="/signup" element=<Signup /> />
+                    <Route path="/short" element=<Short /> />
+                    <Route path="*" element={<h1>Not Found</h1>} />
+                </Route>
+            </Routes>
+        </BrowserRouter>
     </div>
   );
 }

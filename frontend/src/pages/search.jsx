@@ -1,10 +1,16 @@
 import React from "react";
-import Header from "../header";
+import '../config';
 
 const Search = () => {
     return (
         <div>
             <h1>Your requested URL: "stmh"</h1>
+
+            <h2>TEST: {global.config.token.testid}</h2>
+
+            <button
+                onClick={() => {
+                    global.config.token.testid = "testid";}}>{global.config.token.testid}</button>
 
             <h2>Malicious URL Scanner: </h2>
             <p></p>

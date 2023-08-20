@@ -3,26 +3,39 @@ import {Link} from "react-router-dom";
 import {useState} from "react";
 import axios from "axios";
 import '../config';
+import App from "../App";
 
-export default function Login() {
+export default function Login(params) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const { token, setToken } = params;
+
+    function handle(value_new) {
+        setToken(value_new);
+    }
+
 
     async function loginUser(ev) {
         ev.preventDefault();
+        console.log(token);
         try {
             await axios.post("/login", {
                 email: email,
                 password: password
             }).then((res) => {
                 try {
-                    global.config.token.uid = res.uid;
-                    console.log(global.config.token.uid);
+                    if (res) {
+                        if (token === res) {
+                            alert("You are already logged in!");
+                        } else {
+                            setToken(res);
+                            alert("Login successful!");
+                        }
+                    }
                 } catch (err) {
                     console.log(err);
                 }
             });
-            alert("Login successful!");
         } catch (err) {
             alert("Login failed!");
             console.log(err);
