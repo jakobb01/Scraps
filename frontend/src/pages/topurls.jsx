@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import Header from "../header";
 import axios from "axios";
+import Datatable from "./datatable";
 const Topurls = () => {
     const [data, setData] = useState([]);
 
@@ -21,22 +21,7 @@ const Topurls = () => {
         <div>
             <h1>Top 10 most broken URL's submitted to date:</h1>
 
-            <table>
-                <thead>
-                <tr>
-                    <th>URL</th>
-                    <th>Score</th>
-                </tr>
-                </thead>
-                <tbody>
-                {data.map((item, index) => (
-                    <tr key={index}>
-                        <td>{item.url}</td>
-                        <td>{item.score}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            <Datatable data={data} />
 
         </div>
     );
