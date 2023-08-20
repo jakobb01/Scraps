@@ -157,6 +157,7 @@ app.post('/short', async (req, res) => {
       })
     } catch (err) {
       console.log(err);
+      res.status(500).json({Error: err});
     }
   } else {
     return res.status(401).json('Invalid base url');
