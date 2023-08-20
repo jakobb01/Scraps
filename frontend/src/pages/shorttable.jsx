@@ -8,15 +8,15 @@ const ShortTable = (params) => {
     useEffect(() => {
         // eslint-disable-next-line no-unused-vars
         const fetchData = async () => {
-            
+
             try {
                 const response = await axios.get(`/short/history/${token}`);
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
-        await fetchData();
         }
+        fetchData();
     }, []);
 
     return (
