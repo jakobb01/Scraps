@@ -10,14 +10,8 @@ export default function Login(params) {
     const [password, setPassword] = useState("");
     const { token, setToken } = params;
 
-    function handle(value_new) {
-        setToken(value_new);
-    }
-
-
     async function loginUser(ev) {
         ev.preventDefault();
-        console.log(token);
         try {
             await axios.post("/login", {
                 email: email,
@@ -25,10 +19,10 @@ export default function Login(params) {
             }).then((res) => {
                 try {
                     if (res) {
-                        if (token === res) {
+                        if (token === res.data) {
                             alert("You are already logged in!");
                         } else {
-                            setToken(res);
+                            setToken(res.data);
                             alert("Login successful!");
                         }
                     }
@@ -37,6 +31,7 @@ export default function Login(params) {
                 }
             });
         } catch (err) {
+	    setToken(null);
             alert("Login failed!");
             console.log(err);
         }
