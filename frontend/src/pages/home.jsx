@@ -33,7 +33,7 @@ const Home = (params) => {
     return (
         <div className="home-container">
             <header>
-                <h1>CHECK-THE-WEB</h1>
+                <h1>SCRAPS</h1>
             </header>
             <main>
                 <div className="url-input-container">
