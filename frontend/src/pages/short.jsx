@@ -3,6 +3,7 @@ import axios from "axios";
 import Datatable from "../components/datatable";
 
 const Short = (params) => {
+    const [seed, setSeed] = useState(1);
     const [base_url, setBaseUrl] = useState("");
     const [hdata, setHdata] = useState([]);
     const [data, setData] = useState([]);
@@ -20,7 +21,7 @@ const Short = (params) => {
             }
         }
         fetchData();
-    }, []);
+    }, [seed]);
 
     async function shortUrl() {
         setIsLoading(true);
@@ -38,6 +39,7 @@ const Short = (params) => {
                 alert("Shortening failed!");
             } finally {
                 setIsLoading(false);
+                setSeed(Math.random());
             }
         });
     }
@@ -56,8 +58,8 @@ const Short = (params) => {
 
                 {data.data &&
                 <div>
-                    <a>LONG URL: {data.data.url}</a>
-                    <a>SHORT URL: {data.data.shortUrl}</a>
+                    <a href={data.data.url}>LONG URL: {data.data.url}</a><br />
+                    <a href={data.data.shortUrl}>SHORT URL: {data.data.shortUrl}</a><br />
                 </div>
                 }
 

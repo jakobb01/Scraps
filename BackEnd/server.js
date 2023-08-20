@@ -153,7 +153,7 @@ app.post('/short', async (req, res) => {
       res.send({
         uid: req.body.uid,
         url: req.body.url,
-        shortUrl: `${process.env.SERVER_IP || "http://localhost"}:${process.env.SERVER_PORT || 5053}/short/${urlCode}`
+        shortUrl: `${process.env.CLIENT_IP || "http://localhost"}:${process.env.CLIENT_PORT || 3000}/short/${urlCode}`
       })
     } catch (err) {
       console.log(err);
