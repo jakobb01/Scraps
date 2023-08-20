@@ -5,6 +5,7 @@ const Search = (params) => {
     let { token, uurl, uurldata } = params;
     const [isLoading, setIsLoading] = useState(false);
     const [linkCheck, setLinkCheck] = useState([]);
+    const [i, setI] = useState(1);
 
     async function tryAgain() {
         await axios.post("/search/safe", {
@@ -16,13 +17,21 @@ const Search = (params) => {
     }
 
     async function getLinkCheck() {
+        setIsLoading(true);
+        setI(0);
         // timeout may be needed
+        try {
         await axios.post("/search/linkcheck", {
             uid: token,
             url: uurl
         }).then((res) => {
             setLinkCheck(res);
         });
+        } catch (err) {
+            alert("Link check failed!");
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     if ( uurldata.message === "Success." && uurldata.success) {
@@ -47,8 +56,8 @@ const Search = (params) => {
                 {uurldata.redirected ? <div>Redirected: YES</div> : <div>Redirected: NO</div>}
 
 
-                
-                <button onClick={getLinkCheck}>Check for broken links on website</button>
+
+                {!isLoading && i===1 && <button onClick={getLinkCheck}>Check for broken links on website</button>}
 
                 {isLoading && <h2>Loading...</h2>}
 
@@ -58,12 +67,14 @@ const Search = (params) => {
                     <div>Number of broken links / all links: {linkCheck.data.numofbroken} / {linkCheck.data.numofall}</div>
                     <div>BROKEN LINKS PRESENT {linkCheck.data.percent}% OF ALL LINKS</div>
 
+                    <div>
                     {linkCheck.data.brokenlinks.map((item) => {
                         <div>
                         <div>URL: {item.url}</div>
                         <div>STATE: {item.state}</div>
                         </div>
                     })}
+                    </div>
 
                 </div>
                 }

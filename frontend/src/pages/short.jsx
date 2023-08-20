@@ -36,6 +36,8 @@ const Short = (params) => {
             } catch (err) {
                 console.log(err);
                 alert("Shortening failed!");
+            } finally {
+                setIsLoading(false);
             }
         });
     }
@@ -54,8 +56,8 @@ const Short = (params) => {
 
                 {data.data &&
                 <div>
-                    <div>LONG URL: {data.data.url}</div>
-                    <div>SHORT URL: {data.data.shortUrl}</div>
+                    <a>LONG URL: {data.data.url}</a>
+                    <a>SHORT URL: {data.data.shortUrl}</a>
                 </div>
                 }
 

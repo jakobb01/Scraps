@@ -9,7 +9,7 @@ const Topurls = () => {
 
             try {
                 const response = await axios.get(`/topurls`);
-                const sortedData = response.data.sort((a, b) => a.score - b.score);
+                const sortedData = response.data.sort((a, b) => b.score - a.score);
                 setData(sortedData);
             } catch (error) {
                 console.error('Error fetching data:', error);
