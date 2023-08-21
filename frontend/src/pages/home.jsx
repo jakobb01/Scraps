@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./home.css";
+import "../pages-css/home.css";
 import axios from "axios";
 
 const Home = (params) => {
+    const [isLoading, setIsLoading] = useState(false);
     const [url, setUrl] = useState("");
     const navigate = useNavigate();
     const { token, setUurl, setUurlData } = params;
@@ -14,6 +15,7 @@ const Home = (params) => {
 
     async function sendUrl(ev) {
         ev.preventDefault();
+	setIsLoading(true);
         try {
             await axios.post("/search/safe", {
                 uid: token,
@@ -26,6 +28,8 @@ const Home = (params) => {
         } catch (err) {
             alert("Error sending URL! Please try again.")
             console.error(err);
+        } finally {
+            setIsLoading(false);
         }
 
     }
@@ -35,6 +39,7 @@ const Home = (params) => {
             <header>
                 <h1>SCRAPS</h1>
             </header>
+	    {!isLoading &&
             <main>
                 <div className="url-input-container">
                     <input
@@ -49,6 +54,12 @@ const Home = (params) => {
                 GO
             </button>
             </main>
+	    }
+	    {isLoading && 
+			    <main>
+			    <h2>Loading...</h2>
+			    </main>
+	    }
         </div>
     );
 };

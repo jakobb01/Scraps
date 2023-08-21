@@ -135,7 +135,8 @@ app.get('/topurls', async (req, res) => {
 //short url page
 app.get('/short/:url', async (req, res) => {
   try {
-    res.send((await db.findShort(req.params.url))[0]);
+    const shortUrl = ((await db.findShort(req.params.url))[0]);
+    res.redirect(shortUrl.url);
   } catch (err) {
     console.log(err);
     res.status(500).json({Error: err});
@@ -153,7 +154,7 @@ app.post('/short', async (req, res) => {
       res.send({
         uid: req.body.uid,
         url: req.body.url,
-        shortUrl: `${process.env.SERVER_IP || "http://localhost"}:${process.env.SERVER_PORT || 5053}/short/${urlCode}`
+        shortUrl: `${process.env.CLIENT_IP || "http://localhost"}:${process.env.CLIENT_PORT || 3000}/short/${urlCode}`
       })
     } catch (err) {
       console.log(err);

@@ -1,12 +1,30 @@
-import React, {useState} from "react";
-import ShortTable from "./shorttable";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
+import DatatableShort from "../components/datatable-short";
 
 const Short = (params) => {
+    const [seed, setSeed] = useState(1);
     const [base_url, setBaseUrl] = useState("");
+    const [hdata, setHdata] = useState([]);
+    const [data, setData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const { token } = params;
 
+    useEffect(() => {
+        const fetchData = async () => {
+
+            try {
+                const response = await axios.get(`/short/history/${token}`);
+                setHdata(response.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchData();
+    }, [seed]);
+
     async function shortUrl() {
+        setIsLoading(true);
         await axios.post("/short", {
             uid: token,
             url: base_url
@@ -14,12 +32,14 @@ const Short = (params) => {
         ).then((res) => {
             try {
                 if (res) {
-                    console.log(res.shortUrl);
-                    alert("Shortening successful!");
+                    setData(res);
                 }
             } catch (err) {
                 console.log(err);
                 alert("Shortening failed!");
+            } finally {
+                setIsLoading(false);
+                setSeed(Math.random());
             }
         });
     }
@@ -34,9 +54,18 @@ const Short = (params) => {
                        onChange={(e) => setBaseUrl(e.target.value)}/>
                 <button type="submit" onClick={shortUrl}>Short!</button>
 
+                {isLoading && <h2>Loading...</h2>}
+
+                {data.data &&
+                <div>
+                    <a href={data.data.url}>LONG URL: {data.data.url}</a><br />
+                    <a href={data.data.shortUrl}>SHORT URL: {data.data.shortUrl}</a><br />
+                </div>
+                }
+
                 <h2>Your short links: </h2>
 
-                <ShortTable token={token}/>
+                <DatatableShort data={hdata} fstName={"LONG URL"} scnName={"SHORT URL"}/>
 
 
             </div>

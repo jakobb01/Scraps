@@ -1,8 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import axios from "axios";
 
 const Search = (params) => {
     let { token, uurl, uurldata } = params;
+    const [isLoading, setIsLoading] = useState(false);
+    const [linkCheck, setLinkCheck] = useState([]);
+    const [i, setI] = useState(1);
+    const [downloadLink, setDownloadLink] = useState(null);
 
     async function tryAgain() {
         await axios.post("/search/safe", {
@@ -14,14 +18,30 @@ const Search = (params) => {
     }
 
     async function getLinkCheck() {
+        setIsLoading(true);
+        setI(0);
         // timeout may be needed
+        try {
         await axios.post("/search/linkcheck", {
             uid: token,
             url: uurl
         }).then((res) => {
-            console.log(res.data);
+            setLinkCheck(res);
         });
+        } catch (err) {
+            alert("Link check failed!");
+        } finally {
+            setIsLoading(false);
+        }
     }
+
+    const downloadBrokenLinks = () => {
+        const blob = new Blob([JSON.stringify(linkCheck.data.brokenlinks)], {
+            type: 'application/json',
+        });
+        const url = URL.createObjectURL(blob);
+        setDownloadLink(url);
+    };
 
     if ( uurldata.message === "Success." && uurldata.success) {
         return (
@@ -45,9 +65,49 @@ const Search = (params) => {
                 {uurldata.redirected ? <div>Redirected: YES</div> : <div>Redirected: NO</div>}
 
 
-                
-                <button onClick={getLinkCheck}>Check for broken links on website</button>
-                <h2>Link checker: </h2>
+
+                {!isLoading && i===1 && <button onClick={getLinkCheck}>Check for broken links on website</button>}
+
+                {isLoading && <h2>Loading...</h2>}
+
+                {linkCheck.data &&
+                <div>
+                    <h2>Link checker: </h2>
+                    <div>Number of broken links / all links: {linkCheck.data.numofbroken} / {linkCheck.data.numofall}</div>
+                    <div>BROKEN LINKS PRESENT {linkCheck.data.percent}% OF ALL LINKS</div>
+
+                    <div style={{ maxHeight: '200px', overflowY: 'scroll' }}>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>URL</th>
+                                <th>Status</th>
+                                <th>State</th>
+                                <th>Parent</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {linkCheck.data.brokenlinks.map((link, index) => (
+                                <tr key={index}>
+                                    <td>{link.url}</td>
+                                    <td>{link.status}</td>
+                                    <td>{link.state}</td>
+                                    <td>{link.parent}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button onClick={downloadBrokenLinks}>Download Broken Links</button>
+                    {downloadLink && (
+                        <a href={downloadLink} download="broken_links.json">
+                            Download
+                        </a>
+                    )}
+
+                </div>
+                }
+
 
             </div>
         );
