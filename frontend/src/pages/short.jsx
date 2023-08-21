@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import Datatable from "../components/datatable";
+import DatatableShort from "../components/datatable-short";
 
 const Short = (params) => {
     const [seed, setSeed] = useState(1);
@@ -65,7 +65,7 @@ const Short = (params) => {
 
                 <h2>Your short links: </h2>
 
-                <Datatable data={hdata} fstName={"LONG URL"} scnName={"SHORT URL"}/>
+                <DatatableShort data={hdata} fstName={"LONG URL"} scnName={"SHORT URL"}/>
 
 
             </div>
