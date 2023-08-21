@@ -21,7 +21,6 @@ export default function Login(params) {
                             alert("You are already logged in!");
                         } else {
                             setToken(res.data);
-                            alert("Login successful!");
                         }
                     }
                 } catch (err) {

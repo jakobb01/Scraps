@@ -135,7 +135,8 @@ app.get('/topurls', async (req, res) => {
 //short url page
 app.get('/short/:url', async (req, res) => {
   try {
-    res.send((await db.findShort(req.params.url))[0]);
+    const shortUrl = ((await db.findShort(req.params.url))[0]);
+    res.redirect(shortUrl.url);
   } catch (err) {
     console.log(err);
     res.status(500).json({Error: err});

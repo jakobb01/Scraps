@@ -1,7 +1,6 @@
 
 const DatatableShort = (params) => {
     const { data,fstName, scnName } = params;
-    const shortLink = `http://88.200.63.148:{process.env.CLIENT_PORT}/short/{item.short}`;
 
     return (
         <table>
@@ -20,8 +19,8 @@ const DatatableShort = (params) => {
                         </a>
                     </td>
                     <td>
-                        <a href={shortLink} target="_blank" rel="noopener noreferrer">
-                            {shortLink}
+                        <a href={`http://88.200.63.148:5053/short/${item.short}`} target="_blank" rel="noopener noreferrer">
+		      		{`http://88.200.63.148:5053/short/${item.short}`}
                         </a>
                     </td>
                 </tr>
